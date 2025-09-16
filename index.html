@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheda Allenamento</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header fisso -->
+    <header class="app-header">
+        <div class="container">
+            <div class="header-content">
+                <button id="backBtn" class="btn-back hidden">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <h1 id="headerTitle">Scheda Allenamento</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenuto principale -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- Home Page -->
+            <div id="homePage" class="page active">
+                <div class="welcome-section">
+                    <h2>Seleziona il tuo allenamento</h2>
+                    <p>Scegli il giorno di allenamento per iniziare a registrare le tue performance</p>
+                </div>
+                
+                <div class="workout-grid">
+                    <div class="workout-card" data-day="1">
+                        <div class="workout-icon">🦵</div>
+                        <h3>Day 1 - Lower 1</h3>
+                        <p>Squat focus / catena anteriore + spalle</p>
+                        <div class="workout-stats">
+                            <span class="stat">11 esercizi</span>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-card" data-day="2">
+                        <div class="workout-icon">💪</div>
+                        <h3>Day 2 - Upper 1</h3>
+                        <p>Spinta + Braccia</p>
+                        <div class="workout-stats">
+                            <span class="stat">9 esercizi</span>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-card" data-day="3">
+                        <div class="workout-icon">🏋️</div>
+                        <h3>Day 3 - Lower</h3>
+                        <p>Deadlift - posterior chain focus + dorso</p>
+                        <div class="workout-stats">
+                            <span class="stat">9 esercizi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagine Workout Day -->
+            <div id="workoutDay1" class="page workout-page">
+                <div class="workout-header">
+                    <h2>🦵 Day 1 - Lower 1</h2>
+                    <p>Squat focus / catena anteriore + spalle</p>
+                </div>
+                <div id="exercisesList1" class="exercises-list"></div>
+            </div>
+
+            <div id="workoutDay2" class="page workout-page">
+                <div class="workout-header">
+                    <h2>💪 Day 2 - Upper 1</h2>
+                    <p>Spinta + Braccia</p>
+                </div>
+                <div id="exercisesList2" class="exercises-list"></div>
+            </div>
+
+            <div id="workoutDay3" class="page workout-page">
+                <div class="workout-header">
+                    <h2>🏋️ Day 3 - Lower</h2>
+                    <p>Deadlift - posterior chain focus + dorso</p>
+                </div>
+                <div id="exercisesList3" class="exercises-list"></div>
+            </div>
+
+            <!-- SEZIONE STATISTICHE -->
+            <div id="statisticsPage" class="page">
+                <div class="stats-container">
+                    <h2>📊 Statistiche Allenamento</h2>
+                    
+                    <!-- Cards statistiche principali -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">🏋️</div>
+                            <div class="stat-content">
+                                <h3 id="totalSessions">0</h3>
+                                <p>Sessioni Totali</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">⚡</div>
+                            <div class="stat-content">
+                                <h3 id="totalVolume">0</h3>
+                                <p>Volume Totale (kg)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">⏱️</div>
+                            <div class="stat-content">
+                                <h3 id="totalTime">0</h3>
+                                <p>Tempo Totale (min)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">🎯</div>
+                            <div class="stat-content">
+                                <h3 id="personalRecords">0</h3>
+                                <p>Personal Records</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Grafici -->
+                    <div class="charts-section">
+                        <!-- Grafico Volume Settimanale -->
+                        <div class="chart-container">
+                            <h3>📈 Volume Settimanale</h3>
+                            <canvas id="weeklyVolumeChart"></canvas>
+                        </div>
+                        
+                        <!-- Grafico Progressione Forza -->
+                        <div class="chart-container">
+                            <h3>💪 Progressione Forza</h3>
+                            <div class="exercise-selector">
+                                <select id="exerciseSelect">
+                                    <option value="squat">Squat</option>
+                                    <option value="bench">Panca Piana</option>
+                                    <option value="deadlift">Stacco</option>
+                                </select>
+                            </div>
+                            <canvas id="strengthProgressChart"></canvas>
+                        </div>
+                        
+                        <!-- Heatmap Frequenza -->
+                        <div class="chart-container">
+                            <h3>🔥 Frequenza Allenamenti</h3>
+                            <div class="heatmap-container">
+                                <div class="heatmap-legend">
+                                    <span>Meno</span>
+                                    <div class="legend-colors">
+                                        <div class="legend-color" data-level="0"></div>
+                                        <div class="legend-color" data-level="1"></div>
+                                        <div class="legend-color" data-level="2"></div>
+                                        <div class="legend-color" data-level="3"></div>
+                                        <div class="legend-color" data-level="4"></div>
+                                    </div>
+                                    <span>Più</span>
+                                </div>
+                                <div id="heatmapGrid" class="heatmap-grid"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Personal Records -->
+                        <div class="chart-container">
+                            <h3>🏆 Personal Records</h3>
+                            <div id="personalRecordsList" class="pr-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SEZIONE PROFILO -->
+            <div id="profilePage" class="page">
+                <div class="profile-container">
+                    <h2>👤 Profilo</h2>
+                    
+                    <!-- Informazioni Personali -->
+                    <div class="profile-section">
+                        <h3>📋 Informazioni Personali</h3>
+                        <div class="form-group">
+                            <label for="userName">Nome</label>
+                            <input type="text" id="userName" placeholder="Inserisci il tuo nome">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="userAge">Età</label>
+                                <input type="number" id="userAge" placeholder="25" min="16" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="userWeight">Peso (kg)</label>
+                                <input type="number" id="userWeight" placeholder="70" min="40" max="200" step="0.1">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="userHeight">Altezza (cm)</label>
+                                <input type="number" id="userHeight" placeholder="175" min="140" max="220">
+                            </div>
+                            <div class="form-group">
+                                <label for="userGender">Sesso</label>
+                                <select id="userGender">
+                                    <option value="">Seleziona</option>
+                                    <option value="M">Maschio</option>
+                                    <option value="F">Femmina</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="userExperience">Livello Esperienza</label>
+                            <select id="userExperience">
+                                <option value="principiante">Principiante</option>
+                                <option value="intermedio">Intermedio</option>
+                                <option value="avanzato">Avanzato</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="userGoals">Obiettivi</label>
+                            <select id="userGoals" multiple>
+                                <option value="forza">Incremento Forza</option>
+                                <option value="massa">Aumento Massa</option>
+                                <option value="definizione">Definizione</option>
+                                <option value="resistenza">Resistenza</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Impostazioni App -->
+                    <div class="profile-section">
+                        <h3>⚙️ Impostazioni App</h3>
+                        <div class="settings-group">
+                            <div class="setting-item">
+                                <label for="unitSystem">Unità di Misura</label>
+                                <select id="unitSystem">
+                                    <option value="metric">Metriche (kg)</option>
+                                    <option value="imperial">Imperiali (lbs)</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label for="defaultRestTimer">Timer Riposo Default (sec)</label>
+                                <input type="number" id="defaultRestTimer" value="120" min="30" max="600" step="15">
+                            </div>
+                            <div class="setting-item">
+                                <label class="switch">
+                                    <input type="checkbox" id="workoutNotifications">
+                                    <span class="slider"></span>
+                                </label>
+                                <span>Notifiche Allenamento</span>
+                            </div>
+                            <div class="setting-item">
+                                <label class="switch">
+                                    <input type="checkbox" id="darkTheme">
+                                    <span class="slider"></span>
+                                </label>
+                                <span>Tema Scuro</span>
+                            </div>
+                            <div class="setting-item">
+                                <label class="switch">
+                                    <input type="checkbox" id="autoSave" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span>Salvataggio Automatico</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gestione Dati -->
+                    <div class="profile-section">
+                        <h3>💾 Gestione Dati</h3>
+                        <div class="data-actions">
+                            <button class="btn btn-secondary" id="exportDataBtn">
+                                📤 Esporta Dati (JSON)
+                            </button>
+                            <button class="btn btn-secondary" id="importDataBtn">
+                                📥 Importa Dati
+                            </button>
+                            <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                            <button class="btn btn-secondary" id="backupDataBtn">
+                                💾 Backup Dati
+                            </button>
+                            <button class="btn btn-danger" id="resetDataBtn">
+                                🗑️ Reset Completo
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Info App -->
+                    <div class="profile-section">
+                        <h3>ℹ️ Informazioni App</h3>
+                        <div class="app-info">
+                            <div class="info-item">
+                                <span>Versione:</span>
+                                <span>1.0.0</span>
+                            </div>
+                            <div class="info-item">
+                                <span>Ultimo Backup:</span>
+                                <span id="lastBackupDate">Mai</span>
+                            </div>
+                            <div class="info-item">
+                                <span>Dati Utilizzati:</span>
+                                <span id="dataUsage">0 KB</span>
+                            </div>
+                        </div>
+                        <div class="app-links">
+                            <button class="btn btn-link" id="privacyBtn">
+                                🔒 Privacy Policy
+                            </button>
+                            <button class="btn btn-link" id="termsBtn">
+                                📜 Termini di Servizio
+                            </button>
+                            <button class="btn btn-link" id="contactBtn">
+                                ✉️ Contattaci
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Menu Bottom -->
+    <nav class="bottom-menu">
+        <div class="menu-item active" data-page="home">
+            <div class="menu-icon">🏠</div>
+            <span>Home</span>
+        </div>
+        <div class="menu-item" data-page="statistics">
+            <div class="menu-icon">📊</div>
+            <span>Statistiche</span>
+        </div>
+        <div class="menu-item" data-page="profile">
+            <div class="menu-icon">👤</div>
+            <span>Profilo</span>
+        </div>
+    </nav>
+
+    <!-- Modal per conferme -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Conferma</h3>
+            <p id="modalMessage">Sei sicuro?</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelBtn">Annulla</button>
+                <button class="btn btn-primary" id="confirmBtn">Conferma</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exercise Modal -->
+    <div id="exerciseModal" class="modal">
+        <div class="modal-content exercise-modal-content">
+            <div class="exercise-modal-header">
+                <h3 id="exerciseModalTitle">Esercizio</h3>
+                <button class="close-modal" id="closeExerciseModal">&times;</button>
+            </div>
+            <div class="exercise-modal-body">
+                <div class="exercise-details">
+                    <p id="exerciseModalDetails"></p>
+                </div>
+                
+                <div class="current-session">
+                    <h4>Sessione Attuale</h4>
+                    <div id="currentSets" class="current-sets"></div>
+                </div>
+                
+                <div class="add-set-form">
+                    <h4>Aggiungi Serie</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="setWeight">Peso (kg)</label>
+                            <input type="number" id="setWeight" min="0" step="0.5" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="setReps">Ripetizioni</label>
+                            <input type="number" id="setReps" min="1" placeholder="1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="setNotes">Note (opzionale)</label>
+                        <textarea id="setNotes" rows="2" placeholder="Note sulla serie..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" id="addSetBtn">➕ Aggiungi Serie</button>
+                </div>
+                
+                <div class="exercise-history">
+                    <h4>Storico</h4>
+                    <div id="exerciseHistory" class="history-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification toast -->
+    <div id="toast" class="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
